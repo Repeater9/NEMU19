@@ -88,6 +88,7 @@ static int cmd_si(char *args)
        {
           cpu_exec(1);   
        }
+     else{
      uint32_t n = 0;
      while(*args != '\0')
      {
@@ -98,6 +99,7 @@ static int cmd_si(char *args)
           }
      } 
      cpu_exec(n);
+    }
      return 0;
 }
 
