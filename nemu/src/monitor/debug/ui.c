@@ -38,6 +38,10 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+
+static int cmd_info(char *args);
+
 static struct {
 	char *name;
 	char *description;
@@ -46,6 +50,8 @@ static struct {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
+        { "si", "Single Step", cmd_si},
+        { "info", "Print the state of CPU or monitor", cmd_info},
 
 	/* TODO: Add more commands */
 
@@ -76,6 +82,39 @@ static int cmd_help(char *args) {
 	return 0;
 }
 
+static int cmd_si(char *args)
+{
+     if(args == NULL)
+       {
+          cpu_exec(1);   
+       }
+     int n = 0;
+     while(*args != '\0')
+     {
+          while(*args >= '0' && *args <= '9')
+          {
+              n = n*10 + (*args - '0');
+              args++;
+          }
+     } 
+     cpu_exec(n);
+     return 0;
+}
+
+static int cmd_info(char *args)
+{
+  if(args != NULL){
+    const char *str[8] = {"eax","ecx","edx","ebx","esp","ebp","esi","edi"};
+    if(strcmp(args,"r") == 0){
+      int i;
+      for(i = 0;i < 8;i++){
+         printf("%s\t%x %d\n",str[i],cpu.gpr[i]._32,cpu.gpr[i]._32);
+      }
+    printf("eip\t%x %d\n",cpu.eip,cpu.eip);
+    }
+  }
+  return 0;
+}
 void ui_mainloop() {
 	while(1) {
 		char *str = rl_gets();
