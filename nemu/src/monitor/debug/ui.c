@@ -88,7 +88,7 @@ static int cmd_si(char *args)
        {
           cpu_exec(1);   
        }
-     int n = 0;
+     uint32_t n = 0;
      while(*args != '\0')
      {
           while(*args >= '0' && *args <= '9')
