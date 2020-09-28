@@ -113,9 +113,9 @@ static int cmd_info(char *args)
     if(strcmp(args,"r") == 0){
       int i;
       for(i = 0;i < 8;i++){
-         printf("%s\t08x%x %d\n",str[i],cpu.gpr[i]._32,cpu.gpr[i]._32);
+         printf("%s\t0x%08x %d\n",str[i],cpu.gpr[i]._32,cpu.gpr[i]._32);
       }
-    printf("eip\t08x%x %d\n",cpu.eip,cpu.eip);
+    printf("eip\t0x%08x %d\n",cpu.eip,cpu.eip);
     }
   }
   return 0;
