@@ -30,7 +30,7 @@ static struct rule {
 	{"/", DIVIDE},					// divide
 	{"-", SUBTRACT},				// subtract
 	{"\\*", MULTIPLY},				// multiply
-	{"\\d+", DECIMAL}				// decimal integer
+	{"[0-9]", DECIMAL}				// decimal integer
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -95,7 +95,7 @@ static bool make_token(char *e) {
 						}
 					}		
 					break;
-					case NOTYPE: break;
+					case NOTYPE: nr_token--; break;
 					default:tokens[nr_token].type = rules[i].token_type; 
 						//panic("please implement me");
 				}
@@ -114,6 +114,84 @@ static bool make_token(char *e) {
 	return true; 
 }
 
+int check_parentheses(int p, int q, bool *success){
+	int result = 0;
+	*success = 0;
+	int judge[40] = {0,};
+	if(tokens[p].type == LP && tokens[q].type == RP){
+		int i; int n = 0;
+		for(i = p + 1;i <= q - 1;i++){
+			if(tokens[i].type == LP || tokens[i].type == RP){
+				judge[n] = tokens[i].type;
+				if(n > 0 && (judge[n] == RP && judge[n - 1] == LP)){
+					judge[n - 1] = judge[n] = 0;
+					n = n - 2;
+				}
+				n++;
+			}
+		}
+		if(judge[0] == 0){
+			result = 1;
+			*success = 1;
+		}
+	}
+	return result;
+}
+
+int Find_DominantOp(int p,int q){
+	int op = -1;
+	int i;
+	int nr_p = 0;
+	int min_rank = 3;
+	for(i = q;i >= p;i--){
+	   if(tokens[i].type == RP) nr_p++;
+           if(tokens[i].type == LP) nr_p--;
+	   if(nr_p == 0 && (tokens[i].type == MULTIPLY || tokens[i].type == DIVIDE) && min_rank > 2){			op = i;
+		   min_rank = 2;  
+           }
+	   if(nr_p == 0 && (tokens[i].type == PLUS || tokens[i].type == SUBTRACT) && min_rank > 1){
+		   op = i;
+		   min_rank = 1;
+           }
+	}
+	return op;
+}
+
+uint32_t eval(int p, int q, bool *success){
+	if(*success == 0) return 0;
+	if(p > q){
+		printf("Bad expression");
+		return 0;
+	}
+	else if(p == q){
+		if(tokens[p].type != DECIMAL){
+			printf("error");
+			return 0;
+		}
+		else{
+			uint32_t  n;
+			sscanf(tokens[p].str,"%u",&n);
+			return n;
+		}
+	}
+	else if(check_parentheses(p,q,success) == true){
+		return eval(p + 1,q - 1,success);
+	}
+	else{
+		int op = Find_DominantOp(p,q);
+		uint32_t value1 = eval(p,op - 1,success);
+		uint32_t value2 = eval(op + 1,q,success);
+		int op_type = tokens[op].type;
+		switch(op_type){
+			case PLUS : return value1 + value2; break;
+			case SUBTRACT : return value1 - value2; break;
+			case MULTIPLY: return value1*value2; break;
+			case DIVIDE: return value1/value2; break;
+			default: assert(0); return 0;
+		}
+	   }
+}
+		
 uint32_t expr(char *e, bool *success) {
 	if(!make_token(e)) {
 		*success = false;
@@ -121,7 +199,9 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
-	panic("please implement me");
-	return 0;
+	uint32_t result = 0;
+	result = eval(0,nr_token - 1,success);
+	//panic("please implement me");
+	return result;
 }
 
