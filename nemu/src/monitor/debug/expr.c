@@ -116,25 +116,24 @@ static bool make_token(char *e) {
 
 bool check_parentheses(int p, int q, bool *success){
 	bool result = false;
-	*success = 0;
 	int judge[40] = {0,};
-	if(tokens[p].type == LP && tokens[q].type == RP){
-		int i; int n = 0;
-		for(i = p + 1;i <= q - 1;i++){
-			if(tokens[i].type == LP || tokens[i].type == RP){
-				judge[n] = tokens[i].type;
-				if(n > 0 && (judge[n] == RP && judge[n - 1] == LP)){
-					judge[n - 1] = 0; judge[n] = 0;
-					n = n - 2;
-				}
-				n++;
+	int i; int n = 0;
+	for(i = p ;i <= q ;i++){
+		if(tokens[i].type == LP || tokens[i].type == RP){
+			judge[n] = tokens[i].type;
+			if(n > 0 && (judge[n] == RP && judge[n - 1] == LP)){
+				judge[n - 1] = 0; judge[n] = 0;
+				n = n - 2;
 			}
-		}
-		if(judge[0] == 0){
-			result = true;
-			*success = 1;
+			n++;
 		}
 	}
+	if(judge[0] == 0){
+		*success = true;
+	}
+	else *success = false;
+	if(tokens[p].type == LP && tokens[q].type == RP && judge[0] == 0)
+	result = true;
 	return result;
 }
 
@@ -160,7 +159,7 @@ int Find_DominantOp(int p,int q){
 uint32_t eval(int p, int q, bool *success){
 	if(*success == 0) return 0;
 	if(p > q){
-		printf("Bad expression");
+		*success = false;
 		return 0;
 	}
 	else if(p == q){
@@ -171,6 +170,7 @@ uint32_t eval(int p, int q, bool *success){
 		else{
 			uint32_t  n;
 			sscanf(tokens[p].str,"%u",&n);
+			*success = true;
 			return n;
 		}
 	}
