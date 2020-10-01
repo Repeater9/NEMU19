@@ -30,7 +30,7 @@ static struct rule {
 	{"/", DIVIDE},					// divide
 	{"-", SUBTRACT},				// subtract
 	{"\\*", MULTIPLY},				// multiply
-	{"[0-9]", DECIMAL}				// decimal integer
+	{"[0-9]+", DECIMAL}				// decimal integer
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )

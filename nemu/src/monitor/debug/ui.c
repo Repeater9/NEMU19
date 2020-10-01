@@ -150,11 +150,12 @@ static int cmd_x(char *args)
 static int cmd_p(char *args)
 {
 	uint32_t result = 0;
-	bool success = 1;
+	bool success = true;
 	result = expr(args,&success);
-	if(success == 0)
-	printf("Invalid expression %s\n",args);
-	else printf("result = %u\n",result);
+	//if(success == 0)
+	//printf("Invalid expression %s\n",args);
+	//else 
+        printf("result = %u\n",result);
 	return 0;
 }
 
