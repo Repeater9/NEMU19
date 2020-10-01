@@ -114,8 +114,8 @@ static bool make_token(char *e) {
 	return true; 
 }
 
-int check_parentheses(int p, int q, bool *success){
-	int result = 0;
+bool check_parentheses(int p, int q, bool *success){
+	bool result = false;
 	*success = 0;
 	int judge[40] = {0,};
 	if(tokens[p].type == LP && tokens[q].type == RP){
@@ -131,7 +131,7 @@ int check_parentheses(int p, int q, bool *success){
 			}
 		}
 		if(judge[0] == 0){
-			result = 1;
+			result = true;
 			*success = 1;
 		}
 	}
@@ -199,9 +199,9 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
-	*success = 1;
 	uint32_t result = 0;
 	result = eval(0,nr_token - 1,success);
+	printf("%d",nr_token);
 	//panic("please implement me");
 	return result;
 }
