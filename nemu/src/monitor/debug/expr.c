@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ
+	NOTYPE = 256, EQ, PLUS, LP, RP, DIVIDE, SUBTRACT, MULTIPLY, DECIMAL
 
 	/* TODO: Add more token types */
 
@@ -23,8 +23,14 @@ static struct rule {
 	 */
 
 	{" +",	NOTYPE},				// spaces
-	{"\\+", '+'},					// plus
-	{"==", EQ}						// equal
+	{"\\+", PLUS},					// plus
+	{"==", EQ},					// equal
+        {"\\(", LP},					// left parenthese
+	{"\\)", RP},					// right parenthese
+	{"/", DIVIDE},					// divide
+	{"-", SUBTRACT},				// subtract
+	{"\\*", MULTIPLY},				// multiply
+	{"\\d+", DECIMAL}				// decimal integer
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -79,8 +85,21 @@ static bool make_token(char *e) {
 				 */
 
 				switch(rules[i].token_type) {
-					default: panic("please implement me");
+					case DECIMAL: tokens[nr_token].type = rules[i].token_type;
+					if(substr_len > 32)
+					printf("error");
+					else{
+						int j;
+						for(j = 0;j < substr_len;j++){
+							tokens[nr_token].str[j] = substr_start[j];
+						}
+					}		
+					break;
+					case NOTYPE: break;
+					default:tokens[nr_token].type = rules[i].token_type; 
+						//panic("please implement me");
 				}
+				nr_token++;
 
 				break;
 			}
