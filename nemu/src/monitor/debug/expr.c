@@ -179,8 +179,8 @@ uint32_t eval(int p, int q, bool *success){
 	}
 	else{
 		int op = Find_DominantOp(p,q);
-		uint32_t value1 = eval(p,op - 1,success);
-		uint32_t value2 = eval(op + 1,q,success);
+		int value1 = eval(p,op - 1,success);
+		int value2 = eval(op + 1,q,success);
 		int op_type = tokens[op].type;
 		switch(op_type){
 			case PLUS : return value1 + value2; break;

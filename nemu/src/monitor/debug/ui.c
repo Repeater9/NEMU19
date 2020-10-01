@@ -44,6 +44,8 @@ static int cmd_info(char *args);
 
 static int cmd_x(char *args);
 
+static int cmd_p(char *args);
+
 static struct {
 	char *name;
 	char *description;
@@ -55,6 +57,7 @@ static struct {
         { "si", "Single Step", cmd_si},
         { "info", "Print the state of CPU or monitor", cmd_info},
         { "x", "read memory", cmd_x},
+        { "p", "compute expressions", cmd_p}
 
 	/* TODO: Add more commands */
 
@@ -142,6 +145,17 @@ static int cmd_x(char *args)
   printf("\n");
 
   return 0;
+}
+
+static int cmd_p(char *args)
+{
+	uint32_t result = 0;
+	bool success = 1;
+	result = expr(args,&success);
+	if(success == 0)
+	printf("Invalid expression %s",args);
+	else printf("result = %u\n",result);
+	return 0;
 }
 
 void ui_mainloop() {
