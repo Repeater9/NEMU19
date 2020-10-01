@@ -124,7 +124,7 @@ int check_parentheses(int p, int q, bool *success){
 			if(tokens[i].type == LP || tokens[i].type == RP){
 				judge[n] = tokens[i].type;
 				if(n > 0 && (judge[n] == RP && judge[n - 1] == LP)){
-					judge[n - 1] = judge[n] = 0;
+					judge[n - 1] = 0; judge[n] = 0;
 					n = n - 2;
 				}
 				n++;
@@ -199,6 +199,7 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
+	*success = 1;
 	uint32_t result = 0;
 	result = eval(0,nr_token - 1,success);
 	//panic("please implement me");
