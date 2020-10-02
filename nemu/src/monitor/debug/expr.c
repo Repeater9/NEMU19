@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, PLUS, LP, RP, DIVIDE, SUBTRACT, MULTIPLY, DECIMAL
+	NOTYPE = 256, EQ, PLUS, LP, RP, DIVIDE, SUBTRACT, MULTIPLY, DECIMAL, NEG, HEX, REGISTER, AND, UNEQ, OR, NOT, P_Dereferenced
 
 	/* TODO: Add more token types */
 
@@ -30,7 +30,14 @@ static struct rule {
 	{"/", DIVIDE},					// divide
 	{"-", SUBTRACT},				// subtract
 	{"\\*", MULTIPLY},				// multiply
-	{"[0-9]+", DECIMAL}				// decimal integer
+	{"[0-9]+", DECIMAL},				// decimal integer
+	{"!=", UNEQ},					// unequal
+	{"0[Xx][a-fA-F0-9]+", HEX},			// hexnumber
+	{"&&", AND},					// logical and
+	{"\\$e?[a-d][xhl]|\\$e?(bp|sp|si|di)"},		// register
+	{"||", OR},					// logical or
+	{"!" , NOT},					// logical not
+	
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -201,6 +208,15 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
+	int i;
+	for(i = 0;i < nr_token; i++){
+		if((tokens[i].type == MULTIPLY || tokens[i].type == SUBTRACT) && (i == 0 || 
+tokens[i - 1].type == PLUS || tokens[i - 1].type == SUBTRACT || tokens[i - 1].type == MULTIPLY ||
+ tokens[i - 1].type == DIVIDE || tokens[i - 1].type == LP)){
+			if(tokens[i].type == MULTIPLY) tokens[i].type = P_Dereferenced;
+			if(tokens[i].type == SUBTRACT) tokens[i].type = NEG;
+	}
+	}
 	uint32_t result = 0;
 	result = eval(0,nr_token - 1,success);
 	//panic("please implement me");
