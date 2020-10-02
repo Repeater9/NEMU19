@@ -201,9 +201,6 @@ uint32_t expr(char *e, bool *success) {
 	/* TODO: Insert codes to evaluate the expression. */
 	uint32_t result = 0;
 	result = eval(0,nr_token - 1,success);
-	int i;
-	for(i = 0;i < nr_token;i++)
-	printf("%d\n",tokens[i].type);
 	//panic("please implement me");
 	return result;
 }
