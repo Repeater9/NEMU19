@@ -90,6 +90,8 @@ static bool make_token(char *e) {
 					printf("error");
 					else{
 						int j;
+						for(j = 0;j < 32;j++)
+						tokens[nr_token].str[j] = '\0';
 						for(j = 0;j < substr_len;j++){
 							tokens[nr_token].str[j] = substr_start[j];
 						}
