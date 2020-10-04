@@ -46,6 +46,10 @@ static int cmd_x(char *args);
 
 static int cmd_p(char *args);
 
+static int cmd_d(char *args);
+
+static int cmd_w(char *args);
+
 static struct {
 	char *name;
 	char *description;
@@ -57,7 +61,9 @@ static struct {
         { "si", "Single Step", cmd_si},
         { "info", "Print the state of CPU or monitor", cmd_info},
         { "x", "read memory", cmd_x},
-        { "p", "compute expressions", cmd_p}
+        { "p", "compute expressions", cmd_p},
+	{ "d", "delete watchpoint, d N means delete watchpoint whose number is N",cmd_d},
+	{ "w", "set watchpoint following a expression", cmd_w}
 
 	/* TODO: Add more commands */
 
@@ -120,8 +126,15 @@ static int cmd_info(char *args)
       }
     printf("eip\t0x%08x %d\n",cpu.eip,cpu.eip);
     }
+    else if(strcmp(args,"w") == 0){
+	info_wp();			//info_wp is declared in watchpoint.c
   }
   return 0;
+  }
+	else{
+		printf("argument needed");
+		return 0;
+	}
 }
 
 static int cmd_x(char *args)
@@ -156,6 +169,20 @@ static int cmd_p(char *args)
 	printf("Invalid expression %s\n",args);
 	else 
         printf("result = %u\n",result);
+	return 0;
+}
+
+static int cmd_d(char *args){
+	int number;
+	sscanf(args,"%d",&number);
+	Delete_wp(number);
+	return 0;
+}
+
+static int cmd_w(char *args){
+	bool success = true;
+	int init_value = expr(args,&success);
+	new_wp(args,init_value);
 	return 0;
 }
 
