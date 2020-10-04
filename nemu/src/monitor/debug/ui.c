@@ -182,7 +182,8 @@ static int cmd_d(char *args){
 static int cmd_w(char *args){
 	bool success = true;
 	int init_value = expr(args,&success);
-	new_wp(args,init_value);
+	WP *p = new_wp(args,init_value);
+	printf("Watchpoint %d: %s\n",p->NO,p->str);
 	return 0;
 }
 
