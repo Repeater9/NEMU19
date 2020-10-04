@@ -30,9 +30,9 @@ static struct rule {
 	{"/", DIVIDE},					// divide
 	{"-", SUBTRACT},				// subtract
 	{"\\*", MULTIPLY},				// multiply
-	{"[0-9]+", DECIMAL},				// decimal integer
 	{"!=", UNEQ},					// unequal
 	{"0[Xx][a-fA-F0-9]+", HEX},			// hexnumber
+	{"[0-9]+",DECIMAL},				//decimal number
 	{"&&", AND},					// logical and
 	{"\\$e?[a-d][xhl]|\\$e?(bp|sp|si|di)|\\$eip",REGISTER},// register
 	{"\\|\\|", OR},					// logical or
@@ -208,9 +208,9 @@ uint32_t eval(int p, int q, bool *success){
 		}
 		if(tokens[p].type == REGISTER){
 			int i; *success = true;
-			const char* reg_32[8] = {"eax","edx","ecx","ebx","ebp","esi","edi","esp"};
-			const char* reg_16[8] = {"ax","dx","cx","bx","bp","si","di","sp"};
-			const char* reg_8[8] = {"al","ah","dl","dh","cl","ch","bl","bh"};
+			const char* reg_32[8] = {"eax","ecx","edx","ebx","esp","ebp","esi","edi"};
+			const char* reg_16[8] = {"ax","cx","dx","bx","sp","bp","si","di"};
+			const char* reg_8[8] = {"al","ah","cl","ch","dl","dh","bl","bh"};
 			for(i = 0;i < 8;i++){
 			   if(strcmp(tokens[p].str,reg_32[i]) == 0){ n = cpu.gpr[i]._32; break;}
 			   if(strcmp(tokens[p].str,reg_16[i]) == 0){ n = cpu.gpr[i]._16; break;}
