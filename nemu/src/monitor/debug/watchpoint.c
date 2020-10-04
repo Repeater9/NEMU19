@@ -94,7 +94,7 @@ void Delete_wp(int order_number){
 
 void info_wp(){
 	WP *p = head;
-	while(p != head){
+	while(p != NULL){
 		printf("Watchpoint %d: %s = %d\n",p->NO,p->str,p->value);
 		p = p->next;
 	}	
