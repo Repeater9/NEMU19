@@ -34,8 +34,8 @@ static struct rule {
 	{"!=", UNEQ},					// unequal
 	{"0[Xx][a-fA-F0-9]+", HEX},			// hexnumber
 	{"&&", AND},					// logical and
-	{"\\$e?[a-d][xhl]|\\$e?(bp|sp|si|di)"},		// register
-	{"||", OR},					// logical or
+	{"\\$e?[a-d][xhl]|\\$e?(bp|sp|si|di)|\\$eip",REGISTER},// register
+	{"\\|\\|", OR},					// logical or
 	{"!" , NOT},					// logical not
 	
 };
@@ -93,8 +93,8 @@ static bool make_token(char *e) {
 
 				switch(rules[i].token_type) {
 					case DECIMAL: tokens[nr_token].type = rules[i].token_type;
-					if(substr_len > 32)
-					printf("error");
+					if(substr_len >= 32)
+					printf("decimal number too large");
 					else{
 						int j;
 						for(j = 0;j < 32;j++)
@@ -103,6 +103,24 @@ static bool make_token(char *e) {
 							tokens[nr_token].str[j] = substr_start[j];
 						}
 					}		
+					break;
+					case HEX: tokens[nr_token].type = rules[i].token_type;
+					if(substr_len >= 34)
+					printf("hex number too large");
+					else{
+						int j;
+						for(j = 0;j < 32;j++)
+						tokens[nr_token].str[j] = '\0';
+						for(j = 0;j < substr_len - 2;j++){
+							tokens[nr_token].str[j] = substr_start[j + 2];						      }
+					}
+					break;
+					case REGISTER: tokens[nr_token].type = rules[i].token_type;
+					int j;
+					for(j = 0;j < 32;j++)
+					tokens[nr_token].str[j] = '\0';
+					for(j = 0;j < substr_len - 1;j++)
+					tokens[nr_token].str[j] = substr_start[j + 1];
 					break;
 					case NOTYPE: nr_token--; break;
 					default:tokens[nr_token].type = rules[i].token_type; 
@@ -134,7 +152,7 @@ bool check_parentheses(int p, int q, bool *success){
 				judge[n - 1] = 0; judge[n] = 0;
 				n = n - 2;
 			}
-			n++;
+			n++;;
 		}
 	}
 	if(judge[0] == 0){
@@ -150,17 +168,22 @@ int Find_DominantOp(int p,int q){
 	int op = -1;
 	int i;
 	int nr_p = 0;
-	int min_rank = 3;
+	int min_rank = 4;
 	for(i = q;i >= p;i--){
 	   if(tokens[i].type == RP) nr_p++;
            if(tokens[i].type == LP) nr_p--;
-	   if(nr_p == 0 && (tokens[i].type == MULTIPLY || tokens[i].type == DIVIDE) && min_rank > 2){			op = i;
-		   min_rank = 2;  
+	   if(nr_p == 0 && (tokens[i].type == MULTIPLY || tokens[i].type == DIVIDE) && min_rank > 3){			op = i;
+		   min_rank = 3;  
            }
-	   if(nr_p == 0 && (tokens[i].type == PLUS || tokens[i].type == SUBTRACT) && min_rank > 1){
+	   if(nr_p == 0 && (tokens[i].type == PLUS || tokens[i].type == SUBTRACT) && min_rank > 2){
+		   op = i;
+		   min_rank = 2;
+           }
+	   if(nr_p == 0 && (tokens[i].type == UNEQ || tokens[i].type == EQ || tokens[i].type == AND
+|| tokens[i].type == OR) && min_rank > 1){
 		   op = i;
 		   min_rank = 1;
-           }
+	   }
 	}
 	return op;
 }
@@ -172,21 +195,50 @@ uint32_t eval(int p, int q, bool *success){
 		return 0;
 	}
 	else if(p == q){
-		if(tokens[p].type != DECIMAL){
-			printf("error");
-			return 0;
-		}
-		else{
-			uint32_t  n;
-			sscanf(tokens[p].str,"%u",&n);
+		int n;
+		if(tokens[p].type == DECIMAL){
+			sscanf(tokens[p].str,"%d",&n);
 			*success = true;
 			return n;
+		}
+		if(tokens[p].type == HEX){
+			sscanf(tokens[p].str,"%x",&n);
+			*success = true;
+			return n;
+		}
+		if(tokens[p].type == REGISTER){
+			int i; *success = true;
+			const char* reg_32[8] = {"eax","edx","ecx","ebx","ebp","esi","edi","esp"};
+			const char* reg_16[8] = {"ax","dx","cx","bx","bp","si","di","sp"};
+			const char* reg_8[8] = {"al","ah","dl","dh","cl","ch","bl","bh"};
+			for(i = 0;i < 8;i++){
+			   if(strcmp(tokens[p].str,reg_32[i]) == 0){ n = cpu.gpr[i]._32; break;}
+			   if(strcmp(tokens[p].str,reg_16[i]) == 0){ n = cpu.gpr[i]._16; break;}
+			   if(strcmp(tokens[p].str,reg_8[i]) == 0){ n = cpu.gpr[i/2]._8[i%2]; break;}
+			}
+			if(strcmp(tokens[p].str,"eip") == 0)
+			n = cpu.eip;
+			return n;
+		}
+		else{
+			*success = false;
+			return 0;
 		}
 	}
 	else if(check_parentheses(p,q,success) == true){
 		return eval(p + 1,q - 1,success);
 	}
 	else{
+		if((q - p) == 1){
+			if(tokens[p].type == NEG) return 0-eval(p + 1,q,success);
+			if(tokens[p].type == NOT) return !eval(p + 1,q,success);
+			if(tokens[p].type == P_Dereferenced) 
+				return swaddr_read(eval(p + 1,q,success),4);
+			else{
+				*success = false;
+				return 0;
+			}
+		}
 		int op = Find_DominantOp(p,q);
 		int value1 = eval(p,op - 1,success);
 		int value2 = eval(op + 1,q,success);
@@ -196,6 +248,10 @@ uint32_t eval(int p, int q, bool *success){
 			case SUBTRACT : return value1 - value2; break;
 			case MULTIPLY: return value1*value2; break;
 			case DIVIDE: return value1/value2; break;
+			case AND : return value1 && value2; break;
+			case OR: return value1 || value2; break;
+			case UNEQ: return value1 != value2; break;
+			case EQ: return value1 == value2; break;
 			default: assert(0); return 0;
 		}
 	   }
