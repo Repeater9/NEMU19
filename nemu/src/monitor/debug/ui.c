@@ -168,7 +168,7 @@ static int cmd_p(char *args)
 	if(success == 0)
 	printf("Invalid expression %s\n",args);
 	else 
-        printf("result = %u\n",result);
+        printf("result = %d\n",result);
 	return 0;
 }
 
