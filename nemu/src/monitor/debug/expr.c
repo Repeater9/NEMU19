@@ -152,15 +152,30 @@ bool check_parentheses(int p, int q, bool *success){
 				judge[n - 1] = 0; judge[n] = 0;
 				n = n - 2;
 			}
-			n++;;
+			n++;
 		}
 	}
 	if(judge[0] == 0){
 		*success = true;
 	}
 	else *success = false;
-	if(tokens[p].type == LP && tokens[q].type == RP && judge[0] == 0)
-	result = true;
+	for(i = 0;i < 40;i++)
+	judge[0] = 0;				//clean judge
+ 	n = 0;
+	if(tokens[p].type == LP && tokens[q].type == RP){
+		for(i = p + 1;i <= q - 1;i++){
+			if(tokens[i].type == LP || tokens[i].type == RP){
+				judge[n] = tokens[i].type;
+				if(n > 0 && (judge[n - 1] == LP && judge[n] == RP)){
+					judge[n - 1] = 0; judge[n] = 0;
+					n = n - 2;
+				}
+				n++;
+			}
+		}
+		if(judge[0] == 0)
+		result = true;
+	}
 	return result;
 }
 
