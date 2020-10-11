@@ -244,7 +244,8 @@ uint32_t eval(int p, int q, bool *success){
 		return eval(p + 1,q - 1,success);
 	}
 	else{
-	      if(tokens[p].type == NEG || tokens[p].type == NOT || tokens[p].type == P_Dereferenced){
+		int op = Find_DominantOp(p,q);
+	      if((tokens[p].type == NEG || tokens[p].type == NOT || tokens[p].type == P_Dereferenced)&& op == -1){
 			if(tokens[p].type == NEG) return 0-eval(p + 1,q,success);
 			if(tokens[p].type == NOT) return !eval(p + 1,q,success);
 			if(tokens[p].type == P_Dereferenced) 
@@ -254,7 +255,6 @@ uint32_t eval(int p, int q, bool *success){
 				return 0;
 			}
               }
-		int op = Find_DominantOp(p,q);
 		int value1 = eval(p,op - 1,success);
 		int value2 = eval(op + 1,q,success);
 		int op_type = tokens[op].type;
