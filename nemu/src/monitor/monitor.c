@@ -89,4 +89,7 @@ void restart() {
 
 	/* Initialize DRAM. */
 	init_ddr3();
+
+	/*Initialize EFLAGS*/
+	cpu.EFLAGS.space0 = 1;
 }
