@@ -8,6 +8,6 @@ make_helper(call_rel_32)
 	cpu.esp -= 4;
 	cpu.eip = cpu.eip + op_src->simm;
 	/*after calling call_rel_32 cpu.eip will be added 5 in cpu-exec()                             here we don't need to add 5*/
-	print_asm("call 0x%x",cpu.eip);
+	print_asm("call (0x%x)",cpu.eip + len + 1);
 	return len + 1;
 }
