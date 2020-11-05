@@ -42,3 +42,21 @@ void reg_test() {
 	assert(eip_sample == cpu.eip);
 }
 
+void update_eflags_PF_SF_ZF(uint32_t temp){
+	cpu.EFLAGS.ZF = (temp == 0);
+	cpu.EFLAGS.SF = temp >> 31;
+	uint8_t temp1 = temp & 0xff;
+	uint32_t count = 0;
+	uint32_t i;
+	for(i = 0;i < 8;i++)
+	{
+		if(temp1 & 1)
+		  count++;
+		temp1 = temp1 >> 1;
+	}
+	if(count & 1)
+	  cpu.EFLAGS.PF = 0;
+	else cpu.EFLAGS.PF = 1;
+}
+
+

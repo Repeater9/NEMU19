@@ -3,6 +3,7 @@
 #include "data-mov/mov.h"
 #include "data-mov/xchg.h"
 #include "data-mov/push.h"
+#include "data-mov/pop.h"
 
 #include "arith/dec.h"
 #include "arith/inc.h"
@@ -23,6 +24,7 @@
 #include "logic/test.h"
 
 #include "control/call.h"
+#include "control/ret.h"
 
 #include "string/rep.h"
 

@@ -66,6 +66,8 @@ static inline int check_reg_index(int index) {
 
 extern const char* regsl[];
 extern const char* regsw[];
-extern const char* regsb[];
+extern const char* regsb[];\
+
+void update_eflags_PF_SF_ZF();
 
 #endif
