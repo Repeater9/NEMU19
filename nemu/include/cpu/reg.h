@@ -68,6 +68,72 @@ extern const char* regsl[];
 extern const char* regsw[];
 extern const char* regsb[];\
 
-void update_eflags_PF_SF_ZF();
+void update_eflags_PF_SF_ZF(uint32_t temp);
+
+
+static inline bool check_cc_a(){
+	return !(cpu.EFLAGS.CF | cpu.EFLAGS.ZF);
+}
+
+static inline bool check_cc_ae(){
+	return !cpu.EFLAGS.CF;
+}
+
+static inline bool check_cc_b(){
+	return cpu.EFLAGS.CF;
+}
+
+static inline bool check_cc_be(){
+	return cpu.EFLAGS.CF | cpu.EFLAGS.ZF;
+}
+
+static inline bool check_cc_e(){
+	return cpu.EFLAGS.ZF;
+}
+
+static inline bool check_cc_g(){
+	return (cpu.EFLAGS.ZF == 0 && cpu.EFLAGS.SF == cpu.EFLAGS.OF);
+}
+
+static inline bool check_cc_ge(){
+	return cpu.EFLAGS.SF == cpu.EFLAGS.OF;
+}
+
+static inline bool check_cc_l(){
+	return cpu.EFLAGS.SF != cpu.EFLAGS.OF;
+}
+
+static inline bool check_cc_le(){
+	return cpu.EFLAGS.ZF == 1 || cpu.EFLAGS.SF != cpu.EFLAGS.OF;
+}
+
+static inline bool check_cc_ne(){
+	return !cpu.EFLAGS.ZF;
+}
+
+static inline bool check_cc_no(){
+	return !cpu.EFLAGS.OF;
+}
+
+static inline bool check_cc_np(){
+	return !cpu.EFLAGS.PF;
+}
+
+static inline bool check_cc_ns(){
+	return !cpu.EFLAGS.SF;
+}
+
+static inline bool check_cc_o(){
+	return cpu.EFLAGS.OF; 
+}
+
+static inline bool check_cc_p(){
+	return cpu.EFLAGS.PF;
+}
+
+static inline bool check_cc_s(){
+	return cpu.EFLAGS.SF;	
+}
+
 
 #endif
