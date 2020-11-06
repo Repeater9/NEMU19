@@ -2,7 +2,7 @@
 #define __JCC_H__
 
 make_helper(ja_b);
-make_helper(jaeb);
+make_helper(jae_b);
 make_helper(jb_b);
 make_helper(jbe_b);
 make_helper(je_b);
