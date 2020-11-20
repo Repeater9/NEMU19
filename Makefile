@@ -53,7 +53,7 @@ clean: clean-cpp
 
 ##### some convinient rules #####
 
-USERPROG := obj/testcase/quadratic-eq
+USERPROG := obj/testcase/mov-c
 #ENTRY := $(USERPROG)
 ENTRY := $(kernel_BIN)
 
@@ -73,4 +73,4 @@ test: $(nemu_BIN) $(testcase_BIN) entry
 	bash test.sh $(testcase_BIN)
 
 submit: clean
-	cd .. && tar cvj $(shell pwd | grep -o '[^/]*$$') > $(STU_ID).tar.bz2
+	cd .. && zip -r $(STU_ID).zip $(shell pwd | grep -o '[^/]*$$')
