@@ -33,7 +33,7 @@ typedef struct{
 extern Cache L1_cache;
 extern Cache L2_cache;
 
-uint32_t cache_read(hwaddr_t addr, size_t len, Cache *c);
-uint32_t cache_write(hwaddr_t addr, size_t len, uint32_t val, Cache *c);
+uint32_t cache_read(Cache *c, hwaddr_t addr, size_t len);
+uint32_t cache_write(Cache *c, hwaddr_t addr, size_t len, uint32_t val);
 
 #endif
