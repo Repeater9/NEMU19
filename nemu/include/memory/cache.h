@@ -28,12 +28,14 @@ typedef struct{
     void (* next_level_write) (hwaddr_t, size_t, uint32_t);
 
     CacheLine *line;
+    int *lately_visit;                   //record the block that we lately use in a set
+
 } Cache;
 
 extern Cache L1_cache;
 extern Cache L2_cache;
 
 uint32_t cache_read(Cache *c, hwaddr_t addr, size_t len);
-uint32_t cache_write(Cache *c, hwaddr_t addr, size_t len, uint32_t val);
+void cache_write(Cache *c, hwaddr_t addr, size_t len, uint32_t val);
 
 #endif
