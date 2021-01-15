@@ -1,3 +1,4 @@
+#include "nemu.h"
 #include "common.h"
 #include "memory/cache.h"
 
