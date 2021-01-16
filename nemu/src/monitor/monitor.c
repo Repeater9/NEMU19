@@ -12,6 +12,7 @@ void init_wp_pool();
 void init_ddr3();
 void init_all_cache();
 void make_all_cache();
+void make_all_tlb();
 
 FILE *log_fp = NULL;
 
@@ -41,6 +42,7 @@ void init_monitor(int argc, char *argv[]) {
 	init_wp_pool();
 
 	make_all_cache();
+	make_all_tlb();
 	
 	/* Display welcome message. */
 	welcome();
