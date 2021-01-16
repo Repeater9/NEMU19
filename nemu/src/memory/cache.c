@@ -99,16 +99,28 @@ void cache_write(Cache *c, hwaddr_t addr, size_t len, uint32_t val) {
         uint8_t *data2 = next_line->data;
         if(rest_byte == 1) {
             unalign_rw(data, 1) = val & 0xff;
-            unalign_rw(data2, 3) = (val >> 8) & 0xffffff;
+            //unalign_rw(data2, 3) = (val >> 8) & 0xffffff;
         }
         else if(rest_byte == 2) {
             unalign_rw(data, 2) = val & 0xffff;
-            unalign_rw(data2, 2) = (val >> 16) & 0xffff;
+            //unalign_rw(data2, 2) = (val >> 16) & 0xffff;
         }
         else if(rest_byte == 3) {
             unalign_rw(data, 3) = val & 0xffffff;
-            unalign_rw(data2, 1) = (val >> 24) & 0xff;
+            //unalign_rw(data2, 1) = (val >> 24) & 0xff;
         }
+
+        uint8_t *p_val = (void *)&val + rest_byte;
+		uint32_t rest_byte2 = len - rest_byte;
+		if(rest_byte2 -- > 0) {
+			*data2 = *p_val;
+			if(rest_byte2 -- > 0) {
+				*(++ data2) = *(++ p_val);
+				if(rest_byte2 -- > 0) {
+					*(++ data2) = *(++ p_val);
+				}
+			}
+		}
         
         if(c->write_policy == WRITE_THROUGH) {
             cl->dirty = next_line->dirty = false;
