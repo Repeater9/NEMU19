@@ -9,7 +9,7 @@ void dram_write(hwaddr_t, size_t, uint32_t);
 
 uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 #ifdef USE_CACHE
-	return cache_read(addr, len, &L1_dcache) & (~0u >> ((4 - len) << 3));
+	return cache_read(&L1_cache, addr, len) & (~0u >> ((4 - len) << 3));
 #else
 	return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
 #endif
@@ -17,7 +17,7 @@ uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 
 void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
 #ifdef USE_CACHE
-	cache_write(addr, len, data, &L1_dcache);
+	cache_write(&L1_cache, addr, len, data);
 #else
 	dram_write(addr, len, data);
 #endif

@@ -11,7 +11,7 @@ void init_regex();
 void init_wp_pool();
 void init_ddr3();
 void init_all_cache();
-void make_all_cache();
+void create_all_cache();
 
 FILE *log_fp = NULL;
 
@@ -40,7 +40,7 @@ void init_monitor(int argc, char *argv[]) {
 	/* Initialize the watchpoint pool. */
 	init_wp_pool();
 
-	make_all_cache();
+	create_all_cache();
 	
 	/* Display welcome message. */
 	welcome();
