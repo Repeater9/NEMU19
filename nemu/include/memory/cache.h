@@ -16,21 +16,20 @@ typedef struct {
     uint8_t *sram;
 } CacheLine;
 
-#define CL_VALID 1
-#define get_tag(val) ((val) & ~CL_VALID)
+#define get_tag(val) ((val) & ~1)
 
 typedef struct {
-        int line_size_width;
+        int block_size_width;
         int associativity_width;
         int set_size_width;
 
         int line_size;
-        int nr_line;
+        int block_count;
         int associativity;
-        int nr_set;
+        int set_count;
 
         uint32_t tag_mask;
-        uint32_t line_mask;
+        uint32_t block_mask;
         uint32_t set_mask;
         uint32_t offset_mask;
 

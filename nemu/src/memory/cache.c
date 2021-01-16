@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #define exp2(x) (1 << (x))
-#define mask_with_len(x) (exp2(x) - 1)
+#define get_mask(x) (exp2(x) - 1)
 
 uint32_t dram_read(hwaddr_t, size_t);
 void dram_write(hwaddr_t, size_t, uint32_t);
@@ -16,8 +16,8 @@ Cache L2_cache;
 
 //static inline 
 bool cache_query(Cache *c, hwaddr_t addr, CacheLine **hit_cl) {
-	uint32_t key = (addr & c->tag_mask) | CL_VALID;
-	int set = (addr & c->set_mask) >> c->line_size_width;
+	uint32_t key = (addr & c->tag_mask) | 1;
+	int set = (addr & c->set_mask) >> c->block_size_width;
 	CacheLine *cl = c->line + (set << c->associativity_width);
 	CacheLine *cl_test = cl + c->last_access[set];
 
@@ -40,7 +40,7 @@ bool cache_query(Cache *c, hwaddr_t addr, CacheLine **hit_cl) {
 	}
 
 	/* cache miss */
-	c->last_access[set] = rand() & mask_with_len(c->associativity_width);
+	c->last_access[set] = rand() & get_mask(c->associativity_width);
 	*hit_cl = cl + c->last_access[set];	// victim cache line
 	return false;
 }
@@ -58,7 +58,7 @@ CacheLine* cache_fetch(Cache *c, hwaddr_t addr) {
 	if (cl->valid && cl->dirty) {
 		/* write back */
 		int cl_idx = cl - c->line;
-		hwaddr_t addr0 = get_tag(cl->key_val) + ((cl_idx >> c->associativity_width) << c->line_size_width);
+		hwaddr_t addr0 = get_tag(cl->key_val) + ((cl_idx >> c->associativity_width) << c->block_size_width);
 
 		for(i = 0; i < c->line_size; i += 4) {
 			c->next_level_write(addr0 + i, 4, unalign_rw(cl->sram + i, 4));
@@ -70,7 +70,7 @@ CacheLine* cache_fetch(Cache *c, hwaddr_t addr) {
 		unalign_rw(cl->sram + i, 4) = c->next_level_read(line_start_addr + i, 4);
 	}
 
-	cl->key_val = (addr & c->tag_mask) | CL_VALID;
+	cl->key_val = (addr & c->tag_mask) | 1;
 	cl->dirty = false;
 	return cl;
 }
@@ -154,47 +154,47 @@ static inline void L1_next_level_write(hwaddr_t addr, size_t len, uint32_t data)
 
 static void init_cache(Cache *c) {
 	int i;
-	for(i = 0; i < c->nr_line; i ++) {
+	for(i = 0; i < c->block_count; i ++) {
 		c->line[i].key_val = 0;
 	}
 }
 
 static void make_cache(Cache *c, 
-		int line_size_width, int total_size_width, int associativity_width, 
+		int block_size_width, int total_size_width, int associativity_width, 
 		int write_policy, uint32_t (* next_level_read) (hwaddr_t, size_t),
 		void (* next_level_write) (hwaddr_t, size_t, uint32_t)) {
 	
-	c->line_size_width = line_size_width;
+	c->block_size_width = block_size_width;
 	c->associativity_width = associativity_width;
-	c->set_size_width = total_size_width - line_size_width - associativity_width;
+	c->set_size_width = total_size_width - block_size_width - associativity_width;
 
-	c->line_size = exp2(line_size_width);
-	c->nr_line = exp2(total_size_width - line_size_width);
+	c->line_size = exp2(block_size_width);
+	c->block_count = exp2(total_size_width - block_size_width);
 	c->associativity = exp2(associativity_width);
-	c->nr_set = exp2(total_size_width - line_size_width - associativity_width);
+	c->set_count = exp2(total_size_width - block_size_width - associativity_width);
 
-	c->line_mask = (c->nr_line - 1) << line_size_width;
-	c->set_mask = mask_with_len(c->set_size_width) << line_size_width;
-	c->offset_mask = mask_with_len(line_size_width);
+	c->block_mask = (c->block_count - 1) << block_size_width;
+	c->set_mask = get_mask(c->set_size_width) << block_size_width;
+	c->offset_mask = get_mask(block_size_width);
 	c->tag_mask = ~(c->set_mask | c->offset_mask);
 
 	c->write_policy = write_policy;
 	c->next_level_read = next_level_read;
 	c->next_level_write = next_level_write;
 
-	assert(c->associativity <= c->nr_line);
+	assert(c->associativity <= c->block_count);
 
-	c->line = malloc(sizeof(CacheLine) * c->nr_line);
-	c->last_access = malloc(sizeof(int) * c->nr_set);
+	c->line = malloc(sizeof(CacheLine) * c->block_count);
+	c->last_access = malloc(sizeof(int) * c->set_count);
 
 	int i;
-	for(i = 0; i < c->nr_line; i ++) {
+	for(i = 0; i < c->block_count; i ++) {
 		c->line[i].key_val = 0;
 //		c->line[i].valid = false;
 		c->line[i].sram = malloc(c->line_size);
 	}
 
-	for(i = 0; i < c->nr_set; i ++) {
+	for(i = 0; i < c->set_count; i ++) {
 		c->last_access[i] = 0;
 	}
 }

@@ -76,9 +76,9 @@
 #undef __NR_umount
 #define __NR_umount 22
 #define SYS_umount __NR_umount
-#undef __NR_setuid
-#define __NR_setuid 23
-#define SYS_setuid __NR_setuid
+#undef __set_countuid
+#define __set_countuid 23
+#define SYS_setuid __set_countuid
 #undef __NR_getuid
 #define __NR_getuid 24
 #define SYS_getuid __NR_getuid
@@ -145,9 +145,9 @@
 #undef __NR_brk
 #define __NR_brk 45
 #define SYS_brk __NR_brk
-#undef __NR_setgid
-#define __NR_setgid 46
-#define SYS_setgid __NR_setgid
+#undef __set_countgid
+#define __set_countgid 46
+#define SYS_setgid __set_countgid
 #undef __NR_getgid
 #define __NR_getgid 47
 #define SYS_getgid __NR_getgid
@@ -178,9 +178,9 @@
 #undef __NR_mpx
 #define __NR_mpx 56
 #define SYS_mpx __NR_mpx
-#undef __NR_setpgid
-#define __NR_setpgid 57
-#define SYS_setpgid __NR_setpgid
+#undef __set_countpgid
+#define __set_countpgid 57
+#define SYS_setpgid __set_countpgid
 #undef __NR_ulimit
 #define __NR_ulimit 58
 #define SYS_ulimit __NR_ulimit
@@ -205,9 +205,9 @@
 #undef __NR_getpgrp
 #define __NR_getpgrp 65
 #define SYS_getpgrp __NR_getpgrp
-#undef __NR_setsid
-#define __NR_setsid 66
-#define SYS_setsid __NR_setsid
+#undef __set_countsid
+#define __set_countsid 66
+#define SYS_setsid __set_countsid
 #undef __NR_sigaction
 #define __NR_sigaction 67
 #define SYS_sigaction __NR_sigaction
@@ -217,24 +217,24 @@
 #undef __NR_ssetmask
 #define __NR_ssetmask 69
 #define SYS_ssetmask __NR_ssetmask
-#undef __NR_setreuid
-#define __NR_setreuid 70
-#define SYS_setreuid __NR_setreuid
-#undef __NR_setregid
-#define __NR_setregid 71
-#define SYS_setregid __NR_setregid
+#undef __set_countreuid
+#define __set_countreuid 70
+#define SYS_setreuid __set_countreuid
+#undef __set_countregid
+#define __set_countregid 71
+#define SYS_setregid __set_countregid
 #undef __NR_sigsuspend
 #define __NR_sigsuspend 72
 #define SYS_sigsuspend __NR_sigsuspend
 #undef __NR_sigpending
 #define __NR_sigpending 73
 #define SYS_sigpending __NR_sigpending
-#undef __NR_sethostname
-#define __NR_sethostname 74
-#define SYS_sethostname __NR_sethostname
-#undef __NR_setrlimit
-#define __NR_setrlimit 75
-#define SYS_setrlimit __NR_setrlimit
+#undef __set_counthostname
+#define __set_counthostname 74
+#define SYS_sethostname __set_counthostname
+#undef __set_countrlimit
+#define __set_countrlimit 75
+#define SYS_setrlimit __set_countrlimit
 #undef __NR_getrlimit
 #define __NR_getrlimit 76
 #define SYS_getrlimit __NR_getrlimit
@@ -244,15 +244,15 @@
 #undef __NR_gettimeofday
 #define __NR_gettimeofday 78
 #define SYS_gettimeofday __NR_gettimeofday
-#undef __NR_settimeofday
-#define __NR_settimeofday 79
-#define SYS_settimeofday __NR_settimeofday
+#undef __set_counttimeofday
+#define __set_counttimeofday 79
+#define SYS_settimeofday __set_counttimeofday
 #undef __NR_getgroups
 #define __NR_getgroups 80
 #define SYS_getgroups __NR_getgroups
-#undef __NR_setgroups
-#define __NR_setgroups 81
-#define SYS_setgroups __NR_setgroups
+#undef __set_countgroups
+#define __set_countgroups 81
+#define SYS_setgroups __set_countgroups
 #undef __NR_select
 #define __NR_select 82
 #define SYS_select __NR_select
@@ -298,9 +298,9 @@
 #undef __NR_getpriority
 #define __NR_getpriority 96
 #define SYS_getpriority __NR_getpriority
-#undef __NR_setpriority
-#define __NR_setpriority 97
-#define SYS_setpriority __NR_setpriority
+#undef __set_countpriority
+#define __set_countpriority 97
+#define SYS_setpriority __set_countpriority
 #undef __NR_profil
 #define __NR_profil 98
 #define SYS_profil __NR_profil
@@ -319,9 +319,9 @@
 #undef __NR_syslog
 #define __NR_syslog 103
 #define SYS_syslog __NR_syslog
-#undef __NR_setitimer
-#define __NR_setitimer 104
-#define SYS_setitimer __NR_setitimer
+#undef __set_countitimer
+#define __set_countitimer 104
+#define SYS_setitimer __set_countitimer
 #undef __NR_getitimer
 #define __NR_getitimer 105
 #define SYS_getitimer __NR_getitimer
@@ -370,9 +370,9 @@
 #undef __NR_clone
 #define __NR_clone 120
 #define SYS_clone __NR_clone
-#undef __NR_setdomainname
-#define __NR_setdomainname 121
-#define SYS_setdomainname __NR_setdomainname
+#undef __set_countdomainname
+#define __set_countdomainname 121
+#define SYS_setdomainname __set_countdomainname
 #undef __NR_uname
 #define __NR_uname 122
 #define SYS_uname __NR_uname
@@ -421,12 +421,12 @@
 #undef __NR_afs_syscall
 #define __NR_afs_syscall 137
 #define SYS_afs_syscall __NR_afs_syscall
-#undef __NR_setfsuid
-#define __NR_setfsuid 138
-#define SYS_setfsuid __NR_setfsuid
-#undef __NR_setfsgid
-#define __NR_setfsgid 139
-#define SYS_setfsgid __NR_setfsgid
+#undef __set_countfsuid
+#define __set_countfsuid 138
+#define SYS_setfsuid __set_countfsuid
+#undef __set_countfsgid
+#define __set_countfsgid 139
+#define SYS_setfsgid __set_countfsgid
 #undef __NR__llseek
 #define __NR__llseek 140
 #define SYS__llseek __NR__llseek
@@ -499,9 +499,9 @@
 #undef __NR_mremap
 #define __NR_mremap 163
 #define SYS_mremap __NR_mremap
-#undef __NR_setresuid
-#define __NR_setresuid 164
-#define SYS_setresuid __NR_setresuid
+#undef __set_countresuid
+#define __set_countresuid 164
+#define SYS_setresuid __set_countresuid
 #undef __NR_getresuid
 #define __NR_getresuid 165
 #define SYS_getresuid __NR_getresuid
@@ -517,9 +517,9 @@
 #undef __NR_nfsservctl
 #define __NR_nfsservctl 169
 #define SYS_nfsservctl __NR_nfsservctl
-#undef __NR_setresgid
-#define __NR_setresgid 170
-#define SYS_setresgid __NR_setresgid
+#undef __set_countresgid
+#define __set_countresgid 170
+#define SYS_setresgid __set_countresgid
 #undef __NR_getresgid
 #define __NR_getresgid 171
 #define SYS_getresgid __NR_getresgid
@@ -616,48 +616,48 @@
 #undef __NR_getegid32
 #define __NR_getegid32 202
 #define SYS_getegid32 __NR_getegid32
-#undef __NR_setreuid32
-#define __NR_setreuid32 203
-#define SYS_setreuid32 __NR_setreuid32
-#undef __NR_setregid32
-#define __NR_setregid32 204
-#define SYS_setregid32 __NR_setregid32
+#undef __set_countreuid32
+#define __set_countreuid32 203
+#define SYS_setreuid32 __set_countreuid32
+#undef __set_countregid32
+#define __set_countregid32 204
+#define SYS_setregid32 __set_countregid32
 #undef __NR_getgroups32
 #define __NR_getgroups32 205
 #define SYS_getgroups32 __NR_getgroups32
-#undef __NR_setgroups32
-#define __NR_setgroups32 206
-#define SYS_setgroups32 __NR_setgroups32
+#undef __set_countgroups32
+#define __set_countgroups32 206
+#define SYS_setgroups32 __set_countgroups32
 #undef __NR_fchown32
 #define __NR_fchown32 207
 #define SYS_fchown32 __NR_fchown32
-#undef __NR_setresuid32
-#define __NR_setresuid32 208
-#define SYS_setresuid32 __NR_setresuid32
+#undef __set_countresuid32
+#define __set_countresuid32 208
+#define SYS_setresuid32 __set_countresuid32
 #undef __NR_getresuid32
 #define __NR_getresuid32 209
 #define SYS_getresuid32 __NR_getresuid32
-#undef __NR_setresgid32
-#define __NR_setresgid32 210
-#define SYS_setresgid32 __NR_setresgid32
+#undef __set_countresgid32
+#define __set_countresgid32 210
+#define SYS_setresgid32 __set_countresgid32
 #undef __NR_getresgid32
 #define __NR_getresgid32 211
 #define SYS_getresgid32 __NR_getresgid32
 #undef __NR_chown32
 #define __NR_chown32 212
 #define SYS_chown32 __NR_chown32
-#undef __NR_setuid32
-#define __NR_setuid32 213
-#define SYS_setuid32 __NR_setuid32
-#undef __NR_setgid32
-#define __NR_setgid32 214
-#define SYS_setgid32 __NR_setgid32
-#undef __NR_setfsuid32
-#define __NR_setfsuid32 215
-#define SYS_setfsuid32 __NR_setfsuid32
-#undef __NR_setfsgid32
-#define __NR_setfsgid32 216
-#define SYS_setfsgid32 __NR_setfsgid32
+#undef __set_countuid32
+#define __set_countuid32 213
+#define SYS_setuid32 __set_countuid32
+#undef __set_countgid32
+#define __set_countgid32 214
+#define SYS_setgid32 __set_countgid32
+#undef __set_countfsuid32
+#define __set_countfsuid32 215
+#define SYS_setfsuid32 __set_countfsuid32
+#undef __set_countfsgid32
+#define __set_countfsgid32 216
+#define SYS_setfsgid32 __set_countfsgid32
 #undef __NR_pivot_root
 #define __NR_pivot_root 217
 #define SYS_pivot_root __NR_pivot_root
@@ -679,9 +679,9 @@
 #undef __NR_readahead
 #define __NR_readahead 225
 #define SYS_readahead __NR_readahead
-#undef __NR_setxattr
-#define __NR_setxattr 226
-#define SYS_setxattr __NR_setxattr
+#undef __set_countxattr
+#define __set_countxattr 226
+#define SYS_setxattr __set_countxattr
 #undef __NR_lsetxattr
 #define __NR_lsetxattr 227
 #define SYS_lsetxattr __NR_lsetxattr
@@ -730,9 +730,9 @@
 #undef __NR_sched_getaffinity
 #define __NR_sched_getaffinity 242
 #define SYS_sched_getaffinity __NR_sched_getaffinity
-#undef __NR_set_thread_area
-#define __NR_set_thread_area 243
-#define SYS_set_thread_area __NR_set_thread_area
+#undef __set_count_thread_area
+#define __set_count_thread_area 243
+#define SYS_set_thread_area __set_count_thread_area
 #undef __NR_get_thread_area
 #define __NR_get_thread_area 244
 #define SYS_get_thread_area __NR_get_thread_area
@@ -772,9 +772,9 @@
 #undef __NR_remap_file_pages
 #define __NR_remap_file_pages 257
 #define SYS_remap_file_pages __NR_remap_file_pages
-#undef __NR_set_tid_address
-#define __NR_set_tid_address 258
-#define SYS_set_tid_address __NR_set_tid_address
+#undef __set_count_tid_address
+#define __set_count_tid_address 258
+#define SYS_set_tid_address __set_count_tid_address
 #undef __NR_timer_create
 #define __NR_timer_create 259
 #define SYS_timer_create __NR_timer_create
@@ -826,9 +826,9 @@
 #undef __NR_get_mempolicy
 #define __NR_get_mempolicy 275
 #define SYS_get_mempolicy __NR_get_mempolicy
-#undef __NR_set_mempolicy
-#define __NR_set_mempolicy 276
-#define SYS_set_mempolicy __NR_set_mempolicy
+#undef __set_count_mempolicy
+#define __set_count_mempolicy 276
+#define SYS_set_mempolicy __set_count_mempolicy
 #undef __NR_mq_open
 #define __NR_mq_open 277
 #define SYS_mq_open __NR_mq_open
@@ -928,9 +928,9 @@
 #undef __NR_unshare
 #define __NR_unshare 310
 #define SYS_unshare __NR_unshare
-#undef __NR_set_robust_list
-#define __NR_set_robust_list 311
-#define SYS_set_robust_list __NR_set_robust_list
+#undef __set_count_robust_list
+#define __set_count_robust_list 311
+#define SYS_set_robust_list __set_count_robust_list
 #undef __NR_get_robust_list
 #define __NR_get_robust_list 312
 #define SYS_get_robust_list __NR_get_robust_list
@@ -1033,9 +1033,9 @@
 #undef __NR_sendmmsg
 #define __NR_sendmmsg 345
 #define SYS_sendmmsg __NR_sendmmsg
-#undef __NR_setns
-#define __NR_setns 346
-#define SYS_setns __NR_setns
+#undef __set_countns
+#define __set_countns 346
+#define SYS_setns __set_countns
 #undef __NR_process_vm_readv
 #define __NR_process_vm_readv 347
 #define SYS_process_vm_readv __NR_process_vm_readv
