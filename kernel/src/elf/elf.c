@@ -43,7 +43,7 @@ uint32_t loader() {
 
                         uint32_t pa = 
 #ifdef IA32_PAGE
-						mm_malloc(ph->p_vaddr, ph->p_memsz)	
+						mm_malloc(ph->p_vaddr, ph->p_memsz);
 #else
 						ph->p_vaddr;
 #endif
