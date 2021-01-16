@@ -1,7 +1,9 @@
 #include "nemu.h"
 #include "common.h"
 #include "memory/cache.h"
+#include "memory/page.h"
 
+hwaddr_t page_translate(lnaddr_t);
 lnaddr_t seg_translate(swaddr_t, uint8_t);
 uint32_t dram_read(hwaddr_t, size_t);
 void dram_write(hwaddr_t, size_t, uint32_t);
@@ -25,11 +27,50 @@ void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
 }
 
 uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
-	return hwaddr_read(addr, len);
+	
+	uint32_t data;
+	if(cpu.cr0.paging) {
+		hwaddr_t hwaddr = page_translate(addr);
+		uint32_t remain_byte = PAGE_SIZE - (addr & PAGE_MASK);
+		if(remain_byte < len) {
+			/* data cross the page boundary */
+			data = hwaddr_read(hwaddr, remain_byte);
+
+			hwaddr = page_translate(addr + remain_byte);
+			data |= hwaddr_read(hwaddr, len - remain_byte) << (remain_byte << 3);
+		}
+		else {
+			data = hwaddr_read(hwaddr, len);
+		}
+	}
+	else {
+		
+		data = hwaddr_read(addr, len);
+	}
+
+	return data;
 }
 
 void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
-	hwaddr_write(addr, len, data);
+	if(cpu.cr0.paging) {
+		hwaddr_t hwaddr = page_translate(addr);
+		uint32_t remain_byte = PAGE_SIZE - (addr & PAGE_MASK);
+		if(remain_byte < len) {
+			/* data cross the page boundary */
+			uint32_t cut = PAGE_SIZE - (addr & PAGE_MASK);
+			assert(cut < 4);
+			hwaddr_write(hwaddr, cut, data);
+
+			hwaddr = page_translate(addr + cut);
+			hwaddr_write(hwaddr, len - cut, data >> (cut << 3));
+		}
+		else {
+			hwaddr_write(hwaddr, len, data);
+		}
+	}
+	else {
+		hwaddr_write(addr, len, data);
+	}
 }
 
 uint32_t swaddr_read(swaddr_t addr, size_t len, uint8_t sreg) {
