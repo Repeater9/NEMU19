@@ -44,6 +44,8 @@
 #include "string/scas.h"
 #include "string/stos.h"
 
+#include "flags/flags.h"
+
 #include "misc/misc.h"
 
 #include "special/special.h"
