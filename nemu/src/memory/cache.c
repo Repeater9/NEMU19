@@ -14,9 +14,9 @@ Cache L1_cache;
 Cache L2_cache;
 
 bool is_cache_hit(Cache *c, hwaddr_t addr, CacheLine **hit_line) {
-    int set_no = (addr & c->set_mask) >> c->set_count_width;
+    uint32_t set_no = (addr & c->set_mask) >> c->set_count_width;
     CacheLine *cl = c->line + set_no * c->associativity;
-    int tag = (addr & c->tag_mask) >> (c->set_count_width + c->block_size_width);
+    uint32_t tag = (addr & c->tag_mask) >> (c->set_count_width + c->block_size_width);
     CacheLine *temp = cl + c->lately_visit[set_no];
 
     if(temp->tag == tag) {
@@ -50,7 +50,7 @@ CacheLine *cache_fetch(Cache *c, hwaddr_t addr) {
 
     int i;
     if(cl->valid && cl->dirty) {                                       // In this condition, cache should be written back to next_level
-        int set_no = (cl - c->line) / c->associativity;
+        uint32_t set_no = (cl - c->line) / c->associativity;
         uint32_t next_level_start_addr = cl->tag + (set_no << c->block_size_width);
 
         for(i = 0; i < c->block_size; i+= 4) {
@@ -58,7 +58,7 @@ CacheLine *cache_fetch(Cache *c, hwaddr_t addr) {
         }
     }
 
-    uint32_t block_start = addr & (~c->offset_mask);
+    uint32_t block_start = addr & (~(c->offset_mask));
     for(i = 0; i < c->block_size; i += 4) {
         unalign_rw(cl->data + i, 4) = c->next_level_read(block_start + i, 4);
     }
@@ -133,12 +133,13 @@ void cache_write(Cache *c, hwaddr_t addr, size_t len, uint32_t val) {
         else if(len == 4) {
             unalign_rw(data, 4) = val;
         }
+
         if(c->write_policy == WRITE_BACK) {
             cl->dirty = true;
         }
         else {
             cl->dirty = false;
-            c->next_level_write(addr, 4, val);
+            c->next_level_write(addr, len, val);
         }
     }
 }
@@ -176,7 +177,7 @@ static void create_cache(Cache *c, int block_size_width, int set_count_width, in
 
     int i;
     for(i = 0; i < block_count; i++) {
-        c->line[i].valid = false;
+        // c->line[i].valid = false;
         c->line[i].dirty = false;
         c->line[i].tag = 0;
         c->line[i].data = malloc(c->block_size);

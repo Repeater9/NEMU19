@@ -12,12 +12,12 @@ typedef struct{
 
 typedef struct{
 
-    int block_size_width;
-    int set_count_width;
+    uint32_t block_size_width;
+    uint32_t set_count_width;
 
-    int block_size;
-    int set_count;
-    int associativity;
+    uint32_t block_size;
+    uint32_t set_count;
+    uint32_t associativity;
 
     uint32_t tag_mask;
     uint32_t set_mask;
@@ -28,7 +28,7 @@ typedef struct{
     void (* next_level_write) (hwaddr_t, size_t, uint32_t);
 
     CacheLine *line;
-    int *lately_visit;                   //record the block that we lately use in a set
+    uint32_t *lately_visit;                   //record the block that we lately use in a set
 
 } Cache;
 
