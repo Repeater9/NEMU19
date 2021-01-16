@@ -11,6 +11,7 @@ static void do_execute() {
 #if DATA_BYTE == 2 || DATA_BYTE == 4
 make_instr_helper(r)
 make_instr_helper(rm)
+make_instr_helper(i)
 #endif
 
 #if DATA_BYTE == 1
