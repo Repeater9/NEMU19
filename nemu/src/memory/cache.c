@@ -53,7 +53,7 @@ CacheLine *cache_fetch(Cache *c, hwaddr_t addr) {
         uint32_t set_no = (cl - c->line) / c->associativity;
         uint32_t next_level_start_addr = cl->tag + (set_no << c->block_size_width);
 
-        for(i = 0; i < c->block_size; i+= 4) {
+        for(i = 0; i < c->block_size; i += 4) {
             c->next_level_write(next_level_start_addr + i, 4, unalign_rw(cl->data + i, 4));
         }
     }
@@ -184,7 +184,7 @@ static void create_cache(Cache *c, int block_size_width, int set_count_width, in
     c->next_level_write = next_level_write;
 
     int block_count = c->set_count * c->associativity;
-    c->line = malloc(block_count * sizeof(Cache));
+    c->line = malloc(block_count * sizeof(CacheLine));
     c->lately_visit = malloc(c->set_count * sizeof(int));
 
     int i;
