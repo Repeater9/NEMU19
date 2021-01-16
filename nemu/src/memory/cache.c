@@ -160,7 +160,6 @@ static void init_cache(Cache *c) {
 }
 
 static void make_cache(Cache *c, 
-		uint32_t tag_mask, uint32_t line_mask, uint32_t set_mask, uint32_t offset_mask,
 		int line_size_width, int total_size_width, int associativity_width, 
 		int write_policy, uint32_t (* next_level_read) (hwaddr_t, size_t),
 		void (* next_level_write) (hwaddr_t, size_t, uint32_t)) {
@@ -202,13 +201,10 @@ static void make_cache(Cache *c,
 
 void make_all_cache() {
 	make_cache(&L1_icache, 
-			0xffffe000, 0x0000ffc0, 0x00001fc0, 0x0000003f,
 			6, 16, 3, WRITE_THROUGH, L1_next_level_read, L1_next_level_write);
 	make_cache(&L1_dcache, 
-			0xffffe000, 0x0000ffc0, 0x00001fc0, 0x0000003f,
 			6, 16, 3, WRITE_THROUGH, L1_next_level_read, L1_next_level_write);
 	make_cache(&L2_cache, 
-			0xfffc0000, 0x003fffc0, 0x0003ffc0, 0x0000003f,
 			6, 22, 4, WRITE_BACK, dram_read, dram_write);
 }
 
