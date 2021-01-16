@@ -6,7 +6,7 @@
 typedef struct {
     union {
         union {
-            bool valid      : 1;
+            bool valid  : 1;
             uint32_t tag;
         };  
         uint32_t key_val;
