@@ -43,7 +43,7 @@ bool tlb_query(TLB *t, lnaddr_t lnaddr, int *idx) {
 
 static uint32_t tlb_fetch(TLB *t, lnaddr_t lnaddr) {
 	int idx;
-#ifdef ENABLE_TLB
+#ifdef USE_TLB
    	bool b = tlb_query(t, lnaddr, &idx); 
 	if(b) {
 		/* TLB hit */
