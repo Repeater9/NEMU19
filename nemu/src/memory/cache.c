@@ -176,9 +176,9 @@ static void create_cache(Cache *c, int block_size_width, int set_count_width, in
 
     int i;
     for(i = 0; i < block_count; i++) {
-        c->line[i].valid = 0;
-        c->line[i].dirty = 0;
-        c->line[i].valid = 0;
+        c->line[i].valid = false;
+        c->line[i].dirty = false;
+        c->line[i].tag = 0;
         c->line[i].data = malloc(c->block_size);
     }
 
