@@ -16,10 +16,10 @@ Cache L2_cache;
 bool is_cache_hit(Cache *c, hwaddr_t addr, CacheLine **hit_line) {
     uint32_t set_no = (addr & c->set_mask) >> c->set_count_width;
     CacheLine *cl = c->line + set_no * c->associativity;
-    uint32_t tag = (addr & c->tag_mask) >> (c->set_count_width + c->block_size_width);
+    uint32_t tag_num = (addr & c->tag_mask);
     CacheLine *temp = cl + c->lately_visit[set_no];
 
-    if(temp->tag == tag) {
+    if(temp->tag == tag_num) {
         // cache hit
         *hit_line = temp;
         return true;
@@ -28,7 +28,7 @@ bool is_cache_hit(Cache *c, hwaddr_t addr, CacheLine **hit_line) {
     temp = cl + c->associativity - 1;
 
     for(; temp >= cl; temp--) {
-        if(temp->tag == tag) {
+        if(temp->tag == tag_num) {
             // cache hit
             *hit_line = temp;
             c->lately_visit[set_no] = temp - cl;
@@ -63,7 +63,7 @@ CacheLine *cache_fetch(Cache *c, hwaddr_t addr) {
         unalign_rw(cl->data + i, 4) = c->next_level_read(block_start + i, 4);
     }
 
-    cl->tag = (addr & c->tag_mask) >> (c->set_count_width + c->block_size_width);
+    cl->tag = (addr & c->tag_mask);
     cl->dirty = false;
     cl->valid = true;
     return cl;
