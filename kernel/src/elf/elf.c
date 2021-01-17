@@ -42,7 +42,7 @@ uint32_t loader() {
 		if(ph->p_type == PT_LOAD) {
 
                         uint32_t pa = 
-#ifdef IA32_PAGE1
+#ifdef IA32_PAGE
 						mm_malloc(ph->p_vaddr, ph->p_memsz);
 #else
 						ph->p_vaddr;
